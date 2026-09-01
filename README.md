@@ -1,6 +1,6 @@
 # Strangler Fig
 
-A toolkit for refactoring legacy production applications with AI agents, one vertical slice at a time, without changing what the application does.
+A toolkit for refactoring legacy production applications with AI agents, one vertical slice at a time, without changing what the application does. That includes the newest kind of legacy: vibe coded apps that shipped, found real users, and now need real structure.
 
 This repository gives you framework-specific starting points. Each template folder contains a conventions document that describes the target architecture and four agent definitions for Claude Code that do the mechanical work inside a structure that keeps them honest. You copy a template into your application, tailor the conventions to your project, and run the workflow.
 
@@ -8,9 +8,11 @@ This repository gives you framework-specific starting points. Each template fold
 
 Applications that grow without enforced conventions get expensive to change. The symptoms are familiar. Business logic scattered across controllers. DTOs constructed wherever it was convenient. One file holding a dozen unrelated classes. No reliable boundary between layers. The code works, mostly, but nobody can predict what a change will break.
 
+Vibe coded applications get here faster than anything before them. An app prompted into existence over a few weekends can absolutely reach production and win paying customers. But nobody enforced conventions along the way because nobody was reading the code, so it arrives at the same place a decade of undisciplined hand-written changes used to: logic everywhere, boundaries nowhere, behavior nobody can fully explain. The age of the codebase stopped being the thing that makes it legacy. The absence of structure is.
+
 A full rewrite is the tempting answer and usually the wrong one. It stops feature delivery, carries enormous risk, and throws away behavior that nobody documented but customers depend on.
 
-This pattern takes the other route. Keep the application running, refactor one capability at a time, and use AI agents to do the mechanical work inside a structure that keeps them honest.
+This pattern takes the other route. Keep the application running, refactor one capability at a time, and use AI agents to do the mechanical work inside a structure that keeps them honest. If AI speed created the mess, AI speed with guardrails is how you clean it up without stopping the business.
 
 ## Core Principles
 
