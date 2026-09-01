@@ -96,15 +96,56 @@ Pick one small, well-understood slice as a pilot. The first pass exists to expos
 
 ## Per-Slice Workflow
 
-1. Select a business capability from `slices.md`. Assign it to one developer.
-2. Invoke the **surveyor** agent on the slice. It produces a specification at `docs/refactor/<slice>-spec.md`.
-3. **Review and approve the specification yourself.** This is the human gate. Do not skip it.
-4. Invoke the **test-author** agent with the approved spec. It writes characterization tests against the existing implementation. Run them and confirm they pass.
-5. Invoke the **refactorer** agent with the spec, the tests, and the conventions. It builds the new implementation alongside the old one.
-6. Tests pass unchanged. CI checks pass.
-7. Invoke the **reviewer** agent in a fresh session. It audits the diff against the spec and conventions and reports deviations. You resolve the findings.
-8. Switch the callers to the new implementation and delete the old one.
-9. Pull request, human code review, merge.
+Each role is a Claude Code agent installed in `.claude/agents/`, and you invoke one by asking Claude to use it. The prompts below are ready to paste. They use a slice named `billing` as the example; swap in your slice.
+
+**1. Pick a slice.** Choose one business capability from `docs/refactor/slices.md` and assign it to one developer. Start a branch for it.
+
+**2. Survey it.** Paste:
+
+```text
+Use the surveyor agent to survey the billing slice. Its entry points are
+listed under "Billing" in docs/refactor/slices.md. Save the specification
+it reports to docs/refactor/billing-spec.md so I can review it.
+```
+
+The surveyor itself is read-only. It reports the specification back and the main session saves the file for your review.
+
+**3. Approve the specification.** This is the human gate. Do not skip it and do not delegate it. Read the spec against your knowledge of the product, correct anything wrong by editing the file directly, and decide which flagged oddities are bugs to preserve. Everything downstream inherits this document's accuracy.
+
+**4. Write the characterization tests.** Paste:
+
+```text
+The specification at docs/refactor/billing-spec.md is approved. Use the
+test-author agent to write characterization tests from it, run them against
+the current implementation, and show me the results.
+```
+
+Every test must pass against the existing code before you continue. If the test author reports spec claims it could not reproduce, resolve those with the spec first.
+
+**5. Refactor.** Paste:
+
+```text
+Use the refactorer agent to rebuild the billing slice. The approved spec is
+docs/refactor/billing-spec.md, the characterization tests live in this
+slice's characterization directory, and CONVENTIONS.md describes the target
+architecture. Build the new implementation alongside the old one, switch the
+callers, delete the old code, and leave the characterization tests passing
+unchanged.
+```
+
+**6. Confirm the gates.** Characterization tests pass unchanged, the full suite passes, CI is green. If a characterization test fails, the refactor changed behavior. Stop and find out why.
+
+**7. Review.** Start a fresh Claude Code session first, so the reviewer inherits no context from the work it is auditing. Then paste:
+
+```text
+Use the reviewer agent to audit the billing refactor. The spec is
+docs/refactor/billing-spec.md and the diff is main...HEAD. Report deviations
+from the spec and from CONVENTIONS.md. Change nothing.
+```
+
+You resolve the findings, not the reviewer. Send fixes back through the refactorer if they are structural.
+
+**8. Ship it.** Pull request, human code review, merge.
 
 Assign slices to individual developers so two people are not restructuring overlapping code at the same time. Pick slice boundaries that minimize shared surface area, and sequence the work so shared foundations get refactored before the capabilities that depend on them.
 
