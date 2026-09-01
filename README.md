@@ -66,11 +66,15 @@ A person reviews and approves the surveyor's specification before anything downs
 
 You need [Claude Code](https://claude.com/claude-code) and a git repository you want to refactor.
 
-```bash
-# 1. Clone this repo somewhere outside your application
-git clone https://github.com/vyntric-hq/strangler-fig.git
+**1. Clone this repo somewhere outside your application.**
 
-# 2. Install a template into your application
+```bash
+git clone https://github.com/vyntric-hq/strangler-fig.git
+```
+
+**2. Install a template into your application.**
+
+```bash
 ./strangler-fig/scripts/install.sh laravel /path/to/your-app
 # or
 ./strangler-fig/scripts/install.sh typescript /path/to/your-app
@@ -78,21 +82,15 @@ git clone https://github.com/vyntric-hq/strangler-fig.git
 
 The installer copies the four agent definitions into `.claude/agents/`, the conventions document to `CONVENTIONS.md` at your repository root, and the slice discovery prompt to `docs/refactor/`.
 
-```bash
-# 3. Tailor the conventions document
-```
+**3. Tailor the conventions document.**
 
 This step is not optional. `CONVENTIONS.md` ships with sensible defaults for the framework, but it describes a target architecture and yours will differ in places. Read the whole thing. Change what does not fit. If the answer to "may a controller do this?" is not in the document, agents will invent an answer, and different agents will invent different ones.
 
-```bash
-# 4. Map your application into slices
-```
+**4. Map your application into slices.**
 
 Open Claude Code in your application and paste the contents of `docs/refactor/discover-slices.md`. It reads your codebase without editing anything and produces `docs/refactor/slices.md`, a list of business capabilities with entry points, file footprints, dependencies, and a suggested order of attack. Review the list and correct it. You know the business better than the code does.
 
-```bash
-# 5. Run the per-slice workflow
-```
+**5. Run the per-slice workflow.**
 
 Pick one small, well-understood slice as a pilot. The first pass exists to expose gaps in the conventions document, which will be incomplete on the first attempt no matter how carefully it was written. Revise it based on what the pilot surfaces, then scale to the rest of the team.
 
